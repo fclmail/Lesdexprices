@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dex Prices</title>
+    <style>
+        body {
+            background-color: #013220; /* Dark green */
+            color: #00FF00; /* Fluorescent green */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 5px solid #00FF00; /* Fluorescent green border */
+            box-shadow: 0 0 20px #00FF00;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #00FF00;
+            text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #00FF00;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #005500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dex Prices</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cryptocurrency</th>
+                    <th>DEX Name</th>
+                    <th>Price (USD)</th>
+                </tr>
+            </thead>
+            <tbody id="price-table">
+                <tr><td colspan="3">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const cryptos = ["BTC", "WBTC", "ETH", "WETH", "SHIBA", "LINK", "MATIC", "POLYGON"];
+        const dexes = ["PancakeSwap", "SushiSwap", "Uniswap", "QuickSwap"];
+        const apiEndpoint = "https://api.mockchainlink.com/prices"; // Replace with actual Chainlink Oracle endpoint
+
+        async function fetchPrices() {
+            try {
+                // Mock data (replace with real API fetch)
+                const data = {
+                    PancakeSwap: { BTC: 28750, WBTC: 28740, ETH: 1750, WETH: 1745, SHIBA: 0.0000075, LINK: 7.5, MATIC: 0.85, POLYGON: 0.85 },
+                    SushiSwap: { BTC: 28760, WBTC: 28750, ETH: 1755, WETH: 1750, SHIBA: 0.0000076, LINK: 7.6, MATIC: 0.86, POLYGON: 0.86 },
+                    Uniswap: { BTC: 28740, WBTC: 28730, ETH: 1740, WETH: 1735, SHIBA: 0.0000074, LINK: 7.4, MATIC: 0.84, POLYGON: 0.84 },
+                    QuickSwap: { BTC: 28745, WBTC: 28735, ETH: 1745, WETH: 1740, SHIBA: 0.00000745, LINK: 7.45, MATIC: 0.845, POLYGON: 0.845 }
+                };
+
+                const tableBody = document.getElementById("price-table");
+                tableBody.innerHTML = ""; // Clear the table before updating
+
+                dexes.forEach(dex => {
+                    cryptos.forEach(crypto => {
+                        const price = data[dex][crypto] || "N/A";
+                        const row = `<tr>
+                                        <td>${crypto}</td>
+                                        <td>${dex}</td>
+                                        <td>${price}</td>
+                                     </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+                });
+            } catch (error) {
+                console.error("Error fetching prices:", error);
+                document.getElementById("price-table").innerHTML = "<tr><td colspan='3'>Failed to load data</td></tr>";
+            }
+        }
+
+        setInterval(fetchPrices, 3000); // Update every 3 seconds
+        fetchPrices(); // Initial fetch
+    </script>
+</body>
+</html>
